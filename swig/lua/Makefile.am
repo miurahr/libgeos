@@ -2,14 +2,14 @@
 # This file is part of project GEOS (http://trac.osgeo.org/geos/) 
 #
 EXTRA_DIST = \
-	lua.i \
-	typemap.i
+	lua.i
 
 MAINTAINERCLEANFILES = geos_wrap.cxx
 
 if ENABLE_LUA
 
-SUBDIRS = 
+SUBDIRS = \
+	tests
 
 BUILT_SOURCES = geos_wrap.cxx
 
@@ -27,12 +27,12 @@ geos_la_LDFLAGS = -no-undefined  -module -avoid-version
 
 if ENABLE_SWIG
 
-geos_wrap.cxx: ../geos.i lua.i typemap.i
+geos_wrap.cxx: ../geos.i lua.i
 	$(SWIG) -c++ -lua -o $@ $<
 
 else # !ENABLE_SWIG
 
-geos_wrap.cxx: ../geos.i lua.i typemap.i
+geos_wrap.cxx: ../geos.i lua.i
 	@echo "SWIG is disabled, can't build geos_wrap.cxx"
 	false
 

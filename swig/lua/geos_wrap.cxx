@@ -3058,7 +3058,11 @@ static int _wrap_Geometry_clone(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -3366,7 +3370,11 @@ static int _wrap_Geometry_intersection(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -3446,7 +3454,11 @@ static int _wrap_Geometry_buffer(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -3515,7 +3527,11 @@ static int _wrap_Geometry_convexHull(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -3591,7 +3607,11 @@ static int _wrap_Geometry_difference(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -3667,7 +3687,11 @@ static int _wrap_Geometry_symDifference(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -3736,7 +3760,11 @@ static int _wrap_Geometry_boundary(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -3812,7 +3840,11 @@ static int _wrap_Geometry_union(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -3881,7 +3913,11 @@ static int _wrap_Geometry_pointOnSurface(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -3950,7 +3986,11 @@ static int _wrap_Geometry_getCentroid(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -4019,7 +4059,11 @@ static int _wrap_Geometry_getEnvelope(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 0);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -4129,7 +4173,11 @@ static int _wrap_Geometry_lineMerge(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -4201,7 +4249,11 @@ static int _wrap_Geometry_simplify(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -4273,7 +4325,11 @@ static int _wrap_Geometry_topologyPreserveSimplify(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -5217,7 +5273,11 @@ static int _wrap_Polygon_getExteriorRing(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 0);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -5323,7 +5383,11 @@ static int _wrap_Polygon_getInteriorRingN(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 0);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -5413,7 +5477,11 @@ static int _wrap_GeometryCollection_getGeometryN(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 0);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -5552,7 +5620,11 @@ static int _wrap_createPoint(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -5620,7 +5692,11 @@ static int _wrap_createLineString(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -5688,7 +5764,11 @@ static int _wrap_createLinearRing(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -5711,22 +5791,41 @@ static int _wrap_createPolygon(lua_State* L) {
     arg2 = NULL;
     arg3 = 0;
   }
-  SWIG_check_num_args("createPolygon",1,3)
+  SWIG_check_num_args("createPolygon",1,2)
   if(!SWIG_isptrtype(L,1)) SWIG_fail_arg("createPolygon",1,"GeosLinearRing *");
-  if(lua_gettop(L)>=2 && !SWIG_isptrtype(L,2)) SWIG_fail_arg("createPolygon",2,"GeosLinearRing **");
-  if(lua_gettop(L)>=3 && !lua_isnumber(L,3)) SWIG_fail_arg("createPolygon",3,"size_t");
   if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&arg1,SWIGTYPE_p_GeosLinearRing,SWIG_POINTER_DISOWN))){
     SWIG_fail_ptr("createPolygon",1,SWIGTYPE_p_GeosLinearRing);
   }
   
   if(lua_gettop(L)>=2){
-    if (!SWIG_IsOK(SWIG_ConvertPtr(L,2,(void**)&arg2,SWIGTYPE_p_p_GeosLinearRing,0))){
-      SWIG_fail_ptr("createPolygon",2,SWIGTYPE_p_p_GeosLinearRing);
+    {
+      if (!lua_toboolean(L,-1))
+      {
+        arg2 = NULL;
+        arg3 = 0;
+      }
+      else
+      {
+        /* Make sure the input can be treated as an table. */
+        luaL_checktype(L, -1, LUA_TTABLE);
+        arg3 = lua_objlen(L, -1);
+        /* Allocate space for the C array. */
+        arg2 = (GeosLinearRing**) malloc(arg3*sizeof(GeosLinearRing*));
+        for(size_t i = 0; i < arg3; i++)
+        {
+          lua_rawgeti(L, -1, i+1); // key=1..len
+          /* Get the underlying pointer and give up ownership of it. */
+          GeosLinearRing *ring = NULL;
+          int convertResult = SWIG_ConvertPtr(L, -1, (void**)&ring, SWIGTYPE_p_GeosLinearRing, SWIG_POINTER_DISOWN);
+          if (!SWIG_IsOK(convertResult)) {
+            lua_pushstring(L,SWIG_ArgError(convertResult));
+            SWIG_fail;
+          }
+          /* Put the pointer in the array */
+          arg2[i] = ring;
+        }    
+      }
     }
-  }
-  if(lua_gettop(L)>=3){
-    SWIG_contract_assert((lua_tonumber(L,3)>=0),"number must not be negative")
-    arg3 = (size_t)lua_tonumber(L, 3);
   }
   {
     try
@@ -5773,6 +5872,15 @@ static int _wrap_createPolygon(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
+    }
+    SWIG_arg++;
+  }
+  {
+    if (arg2) {
+      free((void*) arg2);
     }
   }
   return SWIG_arg;
@@ -5780,6 +5888,11 @@ static int _wrap_createPolygon(lua_State* L) {
   if(0) SWIG_fail;
   
 fail:
+  {
+    if (arg2) {
+      free((void*) arg2);
+    }
+  }
   lua_error(L);
   return SWIG_arg;
 }
@@ -6337,7 +6450,11 @@ static int _wrap_WktReader_read(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -6538,7 +6655,11 @@ static int _wrap_WkbReader_read(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   
@@ -6617,7 +6738,11 @@ static int _wrap_WkbReader_readHEX(lua_State* L) {
     case GEOS_GEOMETRYCOLLECTION:
       SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
       break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
     }
+    SWIG_arg++;
   }
   return SWIG_arg;
   

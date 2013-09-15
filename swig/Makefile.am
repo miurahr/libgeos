@@ -18,5 +18,4 @@ if ENABLE_LUA
 endif
 
 EXTRA_DIST = \
-	geos.i \
-	typemap.i
+	geos.i

@@ -28,12 +28,12 @@ _geos_la_LIBADD = $(top_builddir)/capi/libgeos_c.la $(PYTHON_LDFLAGS)
 
 if ENABLE_SWIG
 
-geos_wrap.cxx: ../geos.i ../typemap.i python.i
+geos_wrap.cxx: ../geos.i python.i
 	$(SWIG) $(SWIG_PYTHON_OPT) -o $@ $<
 
 else # ! ENABLE_SWIG
 
-geos_wrap.cxx: ../geos.i ../typemap.i python.i
+geos_wrap.cxx: ../geos.i python.i
 	@echo "SWIG is disabled, can't build geos_wrap.cxx"
 	@false
 

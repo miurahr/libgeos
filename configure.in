@@ -529,6 +529,7 @@ AC_OUTPUT([
 	swig/ruby/Makefile
 	swig/ruby/test/Makefile
 	swig/lua/Makefile
+	swig/lua/tests/Makefile
 	php/Makefile
 	php/test/Makefile
 	tests/Makefile
