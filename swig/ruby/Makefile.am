@@ -32,12 +32,12 @@ geos_la_LDFLAGS = -no-undefined  -module -avoid-version -L$(RUBY_LIB_DIR)
 
 if ENABLE_SWIG
 
-geos_wrap.cxx: ../geos.i ruby.i
+geos_wrap.cxx: ../geos.i ../typemap.i ruby.i
 	$(SWIG) -c++ -ruby -autorename -o $@ $<
 
 else # !ENABLE_SWIG
 
-geos_wrap.cxx: ../geos.i ruby.i
+geos_wrap.cxx: ../geos.i ../typemap.i ruby.i
 	@echo "SWIG is disabled, can't build geos_wrap.cxx"
 	false
 
