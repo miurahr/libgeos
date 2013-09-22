@@ -9,14 +9,24 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-
 # These are used for cross-compiling and for saving the configure script
 # from having to guess our platform (since we know it already)
 DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 
+# Guessing geos version, which is required for C++ binding support
+VER_MAJOR=$(shell grep ^VERSION_MAJOR configure.in|cut -d= -f2)
+VER_MINOR=$(shell grep ^VERSION_MINOR configure.in|cut -d= -f2)
+VER_PATCH=$(shell grep ^VERSION_PATCH configure.in|cut -d= -f2|cut -dr -f1)
+VER=$(VER_MAJOR).$(VER_MINOR).$(VER_PATCH)
+ifeq (..,$(VER))
+$(error configure.in not found or version cannot be guessed)
+else
+$(info Guessed geos version is $(VER))
+endif
 
 CFLAGS = -Wall -g
+CXX = g++ -fpermissive
 
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
 	CFLAGS += -O0
@@ -26,102 +36,127 @@ endif
 ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 	INSTALL_PROGRAM += -s
 endif
+# catch both armel and armhf 
+ifneq (,$(findstring arm-linux-gnueabi,$(DEB_HOST_GNU_TYPE)))
+       CONFFLAGS += --disable-inline
+endif
 
-# shared library versions
-version=`ls source/geom/.libs/lib*.so.* | \
- awk '{if (match($$0,/[0-9]+\.[0-9]+\.[0-9]+$$/)) print substr($$0,RSTART)}'`
-major=`ls source/geom/.libs/lib*.so.* | \
- awk '{if (match($$0,/\.so\.[0-9]+$$/)) print substr($$0,RSTART+4)}'`
+debian/control: 
+		@sed -e 's/@VERSION@/$(VER)/' debian/control.in >$@
 
-#ifeq "2" "$(major)"
-#	POSTGIS_CONFLICT='-u-DConflicts="libpostgis (<< 0.9.0)"'
-#	echo "ver 2"
-#endif
-
-config.status: configure
+config.status: debian/control configure
 	dh_testdir
 	# Add here commands to configure the package.
-	CFLAGS="$(CFLAGS)" \
-	./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) \
-				--prefix=/usr --mandir=\$${prefix}/share/man \
-				--infodir=\$${prefix}/share/info
-
-
-build: build-stamp
-build-stamp:  config.status
-	dh_testdir
-	
-	# Add here commands to compile the package.
-	$(MAKE)
-	$(MAKE) check
-	
-	touch build-stamp
-
-clean:
-	dh_testdir
-	dh_testroot
-	rm -f build-stamp 
-	rm -f debian/shlibs.local
-	
-	# Add here commands to clean up after the build process.
-	-$(MAKE) distclean
 ifneq "$(wildcard /usr/share/misc/config.sub)" ""
+	mv config.sub config.sub.bak
 	cp -f /usr/share/misc/config.sub config.sub
 endif
 ifneq "$(wildcard /usr/share/misc/config.guess)" ""
+	mv config.guess config.guess.bak
 	cp -f /usr/share/misc/config.guess config.guess
 endif
-	
+	CXX="$(CXX)" CFLAGS="$(CFLAGS)" ./configure \
+        --host=$(DEB_HOST_GNU_TYPE) \
+        --build=$(DEB_BUILD_GNU_TYPE) \
+        --enable-ruby \
+		--prefix=/usr \
+        --mandir=\$${prefix}/share/man \
+        --infodir=\$${prefix}/share/info $(CONFFLAGS)
+	cp debian/libgeos-c++.install debian/libgeos-$(VER).install
+	cp debian/libgeos-c++.dirs debian/libgeos-$(VER).dirs
+
+#Architecture
+build: build-arch build-indep
+
+build-arch: build-arch-stamp
+build-arch-stamp:  config.status
+	# Add here commands to compile the arch part of the package.
+	CXX="$(CXX)" CFLAGS="$(CFLAGS)" $(MAKE)
+	touch $@
+
+build-indep: build-indep-stamp
+build-indep-stamp:  config.status
+	# Add here commands to compile the indep part of the package.
+	$(MAKE) -C doc doxygen-html
+	touch $@
+
+clean: 
+	dh_testdir
+	dh_testroot
+	[ ! -f Makefile ] || $(MAKE) distclean
+	[ -f config.sub.bak ] && mv config.sub.bak config.sub || true
+	[ -f config.guess.bak ] && mv config.guess.bak config.guess || true
 	dh_clean 
+	rm -f debian/libgeos-$(VER).install debian/libgeos-$(VER).dirs debian/libgeos++-dev.install
 
-install: build
+install: install-indep install-arch
+install-indep:
 	dh_testdir
 	dh_testroot
-	dh_clean -k 
-	dh_installdirs
-	
-	# Add here commands to install the package into debian/tmp
+	dh_prep -i
+	dh_installdirs -i
+	dh_install -i
+	# debian/libgeos-doc
+	# Install doxygen html files
+	install -m 644 doc/doxygen_docs/html/* debian/libgeos-doc/usr/share/doc/libgeos-doc/html
+	# Install example program source
+	install -m 644 doc/example.cpp debian/libgeos-doc/usr/share/doc/libgeos-doc/examples
+	install -m 644 debian/Makefile.example debian/libgeos-doc/usr/share/doc/libgeos-doc/examples/Makefile
+
+install-arch:
+	dh_testdir
+	dh_testroot
+	dh_prep -s
+	dh_installdirs -s
+	# Add here commands to install the arch part of the package into
+	# debian/tmp.
 	$(MAKE) install DESTDIR=$(CURDIR)/debian/tmp
-	$(MAKE) installcheck DESTDIR=$(CURDIR)/debian/tmp
-	$(CURDIR)/debian/makedoc
+	
+	# add C++ headers to C++ dev package install file
+	cp debian/libgeos++-dev.install.in debian/libgeos++-dev.install
+	find debian/tmp/usr/include/geos -name "*.h" -a ! -name "export.h" | sed -e 's/^debian\/tmp\///' >>debian/libgeos++-dev.install
+	
+	dh_install -s --sourcedir=debian/tmp
+	dh_installman -plibgeos-dev debian/geos-config.1
+	# remove the library from the -dev package
+	rm -f $(CURDIR)/debian/libgeos-dev/usr/lib/libgeos-*.so
+	# debian/libgeos-ruby1.8
+	mkdir -p debian/libgeos-ruby1.8/usr/lib/ruby/
+	cp -ax debian/tmp/usr/local/lib/site_ruby/1.8 \
+	       debian/libgeos-ruby1.8/usr/lib/ruby/1.8
+	find  debian/libgeos-ruby*/usr/lib/ruby -name "*.la" -delete || true
 
-
-# Build architecture-independent files here.
-binary-indep: build install
-# We have nothing to do by default.
-
-# Build architecture-dependent files here.
-binary-arch: build install
+# Must not depend on anything. This is to be called by
+# binary-arch/binary-indep
+# in another 'make' thread.
+binary-common:
 	dh_testdir
 	dh_testroot
-	dh_installchangelogs ChangeLog
-	dh_installchangelogs debian/changelog
+	dh_installchangelogs
 	dh_installdocs
-	dh_installexamples doc/example.cpp
-	dh_movefiles --sourcedir=debian/tmp #woody uses wildcards in pkg.files
-#	dh_install --sourcedir=$(CURDIR)debian/tmp #woody doesn't use wildcards
-#	dh_installmenu
-#	dh_installdebconf	
-#	dh_installlogrotate
-#	dh_installemacsen
-#	dh_installpam
-#	dh_installmime
-#	dh_installinit
-#	dh_installcron
-#	dh_installinfo
+	dh_installexamples
 	dh_installman
 	dh_link
-	dh_strip
+	dh_strip --dbg-package=libgeos-dbg
 	dh_compress
 	dh_fixperms
-#	dh_perl
-#	dh_python
-	dh_makeshlibs
+	dh_makeshlibs -V
 	dh_installdeb
 	dh_shlibdeps
-	dh_gencontrol $(POSTGIS_CONFLICT)
+	for i in $$(grep ^Package: debian/control|cut -d' ' -f2); do \
+			echo "geos:Version=$(VER)" >> $$i.substvars; \
+	done
+	dh_gencontrol
 	dh_md5sums
 	dh_builddeb
 
+# Build architecture independant packages using the common target.
+binary-indep: build-indep install-indep
+	$(MAKE) -f debian/rules DH_OPTIONS=-i binary-common
+
+# Build architecture dependant packages using the common target.
+binary-arch: build-arch install-arch
+	$(MAKE) -f debian/rules DH_OPTIONS=-a binary-common
+
 binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install 
+.PHONY: build clean binary-indep binary-arch binary install install-indep install-arch debian/control
