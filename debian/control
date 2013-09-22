@@ -3,7 +3,7 @@ Section: science
 Priority: optional
 Maintainer: Debian GIS Project <pkg-grass-devel@lists.alioth.debian.org>
 Uploaders: Francesco Paolo Lovergine <frankie@debian.org>
-Build-Depends: debhelper (>= 9), doxygen, swig, ruby, ruby-dev
+Build-Depends: debhelper (>= 9), doxygen, swig, ruby1.8, ruby1.8-dev
 Standards-Version: 3.9.3
 Homepage: http://trac.osgeo.org/geos/
 Vcs-Browser: http://git.debian.org/?p=pkg-grass/geos.git
@@ -25,7 +25,7 @@ Description: Geometry engine for GIS - Development files
 Package: libgeos++-dev
 Section: libdevel
 Architecture: any
-Depends: libgeos-3.3.9 (= ${binary:Version}), libgeos-dev, ${misc:Depends}
+Depends: libgeos-3.5.0dev (= ${binary:Version}), libgeos-dev, ${misc:Depends}
 Suggests: libgdal-doc
 Breaks: libgeos-dev (<< 3.3.1-1~)
 Description: Geometry engine for GIS - C++ development files
@@ -59,7 +59,7 @@ Description: Geometry engine for Geographic Information Systems - C Library
  This package contains the C library. A C++ library is provided
  by the libgeos-* package.
 
-Package: libgeos-3.3.9
+Package: libgeos-3.5.0dev
 Section: libs
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
@@ -109,7 +109,7 @@ Package: libgeos-dbg
 Architecture: any
 Section: debug
 Priority: extra
-Depends: libgeos-3.3.9 (= ${binary:Version}), libgeos-c1 (= ${binary:Version}), ${misc:Depends}
+Depends: libgeos-3.5.0dev (= ${binary:Version}), libgeos-c1 (= ${binary:Version}), ${misc:Depends}
 Description: Debugging symbols for the GEOS library
  GEOS provides a spatial object model and fundamental geometric
  functions. It implements the geometry model defined in the

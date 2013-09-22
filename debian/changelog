@@ -1,9 +1,9 @@
-geos (3.4.99-dev20130922) precise; urgency=low
+geos (3.4.99~3.5.0dev~20130922) precise; urgency=low
 
   * Debian Package rebuild.
   * Import control files from ubuntu package 3.3.8
 
- -- Hiroshi Miura <miurahr@linux.com>  Sun, 22 Sep 2013 09:15:55 +0900
+ -- Hiroshi Miura <miurahr@linux.com>  Sun, 22 Sep 2013 10:21:02 +0900
 
 geos (2.1.0-1) unstable; urgency=low
  
