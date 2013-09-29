@@ -3,7 +3,7 @@ Section: science
 Priority: optional
 Maintainer: Debian GIS Project <pkg-grass-devel@lists.alioth.debian.org>
 Uploaders: Francesco Paolo Lovergine <frankie@debian.org>
-Build-Depends: debhelper (>= 9), doxygen, swig, ruby, ruby-dev
+Build-Depends: debhelper (>= 9), doxygen, swig, ruby1.8, ruby1.8-dev
 Standards-Version: 3.9.3
 Homepage: http://trac.osgeo.org/geos/
 Vcs-Browser: http://git.debian.org/?p=pkg-grass/geos.git
