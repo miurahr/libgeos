@@ -59,6 +59,7 @@ endif
         --host=$(DEB_HOST_GNU_TYPE) \
         --build=$(DEB_BUILD_GNU_TYPE) \
         --enable-ruby \
+	--enable-lua \
 		--prefix=/usr \
         --mandir=\$${prefix}/share/man \
         --infodir=\$${prefix}/share/info $(CONFFLAGS)
@@ -125,6 +126,11 @@ install-arch:
 	cp -ax debian/tmp/usr/local/lib/site_ruby/1.8 \
 	       debian/libgeos-ruby1.8/usr/lib/ruby/1.8
 	find  debian/libgeos-ruby*/usr/lib/ruby -name "*.la" -delete || true
+	# debian/libgeos-lua5.1
+	mkdir -p debian/libgeos-lua5.1/usr/lib/lua/5.1/
+	cp -ax debian/tmp/usr/local/lib/lua/5.1 \
+	       debian/libgeos-lua5.1/usr/lib/lua/5.1
+	find debian/libgeos-lua*/usr/lib/lua -name "*.la" -delete || true
 
 # Must not depend on anything. This is to be called by
 # binary-arch/binary-indep

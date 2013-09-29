@@ -105,6 +105,17 @@ Description: GEOS bindings for Ruby
  .
  This package contains the Ruby bindings for GEOS.
 
+Package: libgeos-lua5.1
+Section: libs
+Architecture: any
+Depends: ${shlib:Depends}, ${misc:Depends}
+Description: GEOS bindings for Lua
+ GEOS provides a patial object model and fundamental geometoric
+ functions. It implements the geometry model defined in the
+ OpenGIS Consortium Simple Features Specification for SQL.
+ .
+ This package contains the LUA bindings for GEOS.
+
 Package: libgeos-dbg
 Architecture: any
 Section: debug
