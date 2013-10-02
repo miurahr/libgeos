@@ -61,6 +61,7 @@ function do_all()
     table.insert(geoms, create_ushaped_linestring(60,60,100))
     table.insert(geoms, create_square_linearring(0,100,100))
     table.insert(geoms, create_square_polygon(0,200,300))
+    table.insert(geoms, geos.createEmptyPoint())
 
     print "--------HERE ARE THE BASE GEOMS ----------"
     wkt_print_geoms(geoms)

@@ -2276,6 +2276,17 @@ SWIGINTERN unsigned char *GeosWkbWriter_writeHEX(GeosWkbWriter *self,GeosGeometr
         GEOSGeom geom = (GEOSGeom) g;
         return GEOSWKBWriter_writeHEX(writer, geom, size);
     }
+
+GeosGeometry *createEmptyPoint()
+{
+    GEOSGeom geom = GEOSGeom_createEmptyPoint();
+
+    if(geom == NULL)
+        throw std::runtime_error(message);
+
+    return (GeosGeometry*) geom;
+}
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -7142,6 +7153,72 @@ static swig_lua_class *swig_GeosWkbWriter_bases[] = {0};
 static const char *swig_GeosWkbWriter_base_names[] = {0};
 static swig_lua_class _wrap_class_GeosWkbWriter = { "WkbWriter", &SWIGTYPE_p_GeosWkbWriter,_wrap_new_WkbWriter, swig_delete_WkbWriter, swig_GeosWkbWriter_methods, swig_GeosWkbWriter_attributes, swig_GeosWkbWriter_bases, swig_GeosWkbWriter_base_names };
 
+static int _wrap_createEmptyPoint(lua_State* L) {
+  int SWIG_arg = 0;
+  GeosGeometry *result = 0 ;
+  
+  SWIG_check_num_args("createEmptyPoint",0,0)
+  {
+    try
+    {
+      result = (GeosGeometry *)createEmptyPoint();
+    }
+    catch (const std::exception& e)
+    {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    /* %typemap(out) GeosGeometry */
+    
+    if (result == NULL)
+    SWIG_exception(SWIG_RuntimeError, message);
+    
+    GeosGeometry *geom = result;
+    GEOSGeomTypes geomId = (GEOSGeomTypes)GEOSGeomTypeId((GEOSGeom) geom);
+    
+    switch (geomId)
+    {
+    case GEOS_POINT:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosPoint, 1);
+      break;
+    case GEOS_LINESTRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosLineString, 1);
+      break;
+    case GEOS_LINEARRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosLinearRing, 1);
+      break;
+    case GEOS_POLYGON:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosPolygon, 1);
+      break;
+    case GEOS_MULTIPOINT:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiPoint, 1);
+      break;
+    case GEOS_MULTILINESTRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiLineString, 1);
+      break;
+    case GEOS_MULTIPOLYGON:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiPolygon, 1);
+      break;
+    case GEOS_GEOMETRYCOLLECTION:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
+      break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
+    }
+    SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 #ifdef __cplusplus
 }
 #endif
@@ -7152,6 +7229,7 @@ static const struct luaL_reg swig_commands[] = {
     { "createLineString", _wrap_createLineString},
     { "createLinearRing", _wrap_createLinearRing},
     { "createPolygon", _wrap_createPolygon},
+    { "createEmptyPoint", _wrap_createEmptyPoint},
     {0,0}
 };
 
