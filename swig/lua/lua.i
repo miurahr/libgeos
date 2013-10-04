@@ -11,7 +11,29 @@
  *
  * ========================================================================= */
 
+/* FIXME */
+%newobject createCollection;
+%inline %{
+GeosGeometry *createCollection(int type, GEOSGeom *geoms, size_t ngeoms)
+{
+    GEOSGeom geom = GEOSGeom_createCollection(type, geoms, ngeoms);
+
+    if(geom == NULL)
+        throw std::runtime_error(message);
+
+    return (GeosGeometry*) geom;
+}
+%}
+
 %newobject createEmptyPoint;
+%newobject createEmptyLineString;
+%newobject createEmptyPolygon;
+%newobject createEmptyCollection;
+%newobject createEmptyPoint_r;
+%newobject createEmptyLineString_r;
+%newobject createEmptyPolygon_r;
+%newobject createEmptyCollection_r;
+
 %inline %{
 GeosGeometry *createEmptyPoint()
 {
@@ -22,4 +44,75 @@ GeosGeometry *createEmptyPoint()
 
     return (GeosGeometry*) geom;
 }
+
+GeosGeometry *createEmptyLineString()
+{
+    GEOSGeom geom = GEOSGeom_createEmptyLineString();
+
+    if(geom == NULL)
+        throw std::runtime_error(message);
+
+    return (GeosGeometry*) geom;
+}
+
+GeosGeometry *createEmptyPolygon()
+{
+    GEOSGeom geom = GEOSGeom_createEmptyPolygon();
+
+    if(geom == NULL)
+        throw std::runtime_error(message);
+
+    return (GeosGeometry*) geom;
+}
+
+GeosGeometry *createEmptyCollection(int type)
+{
+    GEOSGeom geom = GEOSGeom_createEmptyCollection(type);
+
+    if(geom == NULL)
+        throw std::runtime_error(message);
+
+    return (GeosGeometry*) geom;
+}
+
+GeosGeometry *createEmptyPoint_r(GEOSContextHandle_t handle)
+{
+    GEOSGeom geom = GEOSGeom_createEmptyPoint_r(handle);
+
+    if(geom == NULL)
+        throw std::runtime_error(message);
+
+    return (GeosGeometry*) geom;
+}
+
+GeosGeometry *createEmptyLineString_r(GEOSContextHandle_t handle)
+{
+    GEOSGeom geom = GEOSGeom_createEmptyLineString_r(handle);
+
+    if(geom == NULL)
+        throw std::runtime_error(message);
+
+    return (GeosGeometry*) geom;
+}
+
+GeosGeometry *createEmptyPolygon_r(GEOSContextHandle_t handle)
+{
+    GEOSGeom geom = GEOSGeom_createEmptyPolygon_r(handle);
+
+    if(geom == NULL)
+        throw std::runtime_error(message);
+
+    return (GeosGeometry*) geom;
+}
+
+GeosGeometry *createEmptyCollection_r(GEOSContextHandle_t handle,int type)
+{
+    GEOSGeom geom = GEOSGeom_createEmptyCollection_r(handle, type);
+
+    if(geom == NULL)
+        throw std::runtime_error(message);
+
+    return (GeosGeometry*) geom;
+}
+
 %}

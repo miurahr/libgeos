@@ -1532,31 +1532,34 @@ SWIG_Lua_dostring(lua_State *L, const char* str) {
 
 /* -------- TYPES TABLE (BEGIN) -------- */
 
-#define SWIGTYPE_p_GeosCoordinateSequence swig_types[0]
-#define SWIGTYPE_p_GeosGeometry swig_types[1]
-#define SWIGTYPE_p_GeosGeometryCollection swig_types[2]
-#define SWIGTYPE_p_GeosIndexItem swig_types[3]
-#define SWIGTYPE_p_GeosLineString swig_types[4]
-#define SWIGTYPE_p_GeosLinearRing swig_types[5]
-#define SWIGTYPE_p_GeosMultiLineString swig_types[6]
-#define SWIGTYPE_p_GeosMultiLinearRing swig_types[7]
-#define SWIGTYPE_p_GeosMultiPoint swig_types[8]
-#define SWIGTYPE_p_GeosMultiPolygon swig_types[9]
-#define SWIGTYPE_p_GeosPoint swig_types[10]
-#define SWIGTYPE_p_GeosPolygon swig_types[11]
-#define SWIGTYPE_p_GeosPreparedGeometry swig_types[12]
-#define SWIGTYPE_p_GeosQueryCallback swig_types[13]
-#define SWIGTYPE_p_GeosSTRtree swig_types[14]
-#define SWIGTYPE_p_GeosWkbReader swig_types[15]
-#define SWIGTYPE_p_GeosWkbWriter swig_types[16]
-#define SWIGTYPE_p_GeosWktReader swig_types[17]
-#define SWIGTYPE_p_GeosWktWriter swig_types[18]
-#define SWIGTYPE_p_p_GeosLinearRing swig_types[19]
-#define SWIGTYPE_p_size_t swig_types[20]
-#define SWIGTYPE_p_std__string swig_types[21]
-#define SWIGTYPE_p_unsigned_char swig_types[22]
-static swig_type_info *swig_types[24];
-static swig_module_info swig_module = {swig_types, 23, 0, 0, 0, 0};
+#define SWIGTYPE_GEOSGeom swig_types[0]
+#define SWIGTYPE_p_GEOSContextHandle_t swig_types[1]
+#define SWIGTYPE_p_GEOSGeom swig_types[2]
+#define SWIGTYPE_p_GeosCoordinateSequence swig_types[3]
+#define SWIGTYPE_p_GeosGeometry swig_types[4]
+#define SWIGTYPE_p_GeosGeometryCollection swig_types[5]
+#define SWIGTYPE_p_GeosIndexItem swig_types[6]
+#define SWIGTYPE_p_GeosLineString swig_types[7]
+#define SWIGTYPE_p_GeosLinearRing swig_types[8]
+#define SWIGTYPE_p_GeosMultiLineString swig_types[9]
+#define SWIGTYPE_p_GeosMultiLinearRing swig_types[10]
+#define SWIGTYPE_p_GeosMultiPoint swig_types[11]
+#define SWIGTYPE_p_GeosMultiPolygon swig_types[12]
+#define SWIGTYPE_p_GeosPoint swig_types[13]
+#define SWIGTYPE_p_GeosPolygon swig_types[14]
+#define SWIGTYPE_p_GeosPreparedGeometry swig_types[15]
+#define SWIGTYPE_p_GeosQueryCallback swig_types[16]
+#define SWIGTYPE_p_GeosSTRtree swig_types[17]
+#define SWIGTYPE_p_GeosWkbReader swig_types[18]
+#define SWIGTYPE_p_GeosWkbWriter swig_types[19]
+#define SWIGTYPE_p_GeosWktReader swig_types[20]
+#define SWIGTYPE_p_GeosWktWriter swig_types[21]
+#define SWIGTYPE_p_p_GeosLinearRing swig_types[22]
+#define SWIGTYPE_p_size_t swig_types[23]
+#define SWIGTYPE_p_std__string swig_types[24]
+#define SWIGTYPE_p_unsigned_char swig_types[25]
+static swig_type_info *swig_types[27];
+static swig_module_info swig_module = {swig_types, 26, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1628,6 +1631,163 @@ void errorHandler(const char *fmt, ...)
     va_start(args, fmt);
     vsnprintf(message, sizeof(message) - 1, fmt, args);
     va_end(args);
+}
+
+
+#ifdef __cplusplus	/* generic alloc/dealloc fns*/
+#define SWIG_ALLOC_ARRAY(TYPE,LEN) 	new TYPE[LEN]
+#define SWIG_FREE_ARRAY(PTR)		delete[] PTR
+#else
+#define SWIG_ALLOC_ARRAY(TYPE,LEN) 	(TYPE *)malloc(LEN*sizeof(TYPE))
+#define SWIG_FREE_ARRAY(PTR)		free(PTR)
+#endif
+/* counting the size of arrays:*/
+SWIGINTERN int SWIG_itable_size(lua_State* L, int index)
+{
+	int n=0;
+	while(1){
+		lua_rawgeti(L,index,n+1);
+		if (lua_isnil(L,-1))break;
+		++n;
+		lua_pop(L,1);
+	}
+	lua_pop(L,1);
+	return n;
+}
+
+SWIGINTERN int SWIG_table_size(lua_State* L, int index)
+{
+	int n=0;
+	lua_pushnil(L);  /* first key*/
+	while (lua_next(L, index) != 0) {
+		++n;
+		lua_pop(L, 1);  /* removes `value'; keeps `key' for next iteration*/
+	}
+	return n;
+}
+
+/* super macro to declare array typemap helper fns */
+#define SWIG_DECLARE_TYPEMAP_ARR_FN(NAME,TYPE)\
+	SWIGINTERN int SWIG_read_##NAME##_num_array(lua_State* L,int index,TYPE *array,int size){\
+		int i;\
+		for (i = 0; i < size; i++) {\
+			lua_rawgeti(L,index,i+1);\
+			if (lua_isnumber(L,-1)){\
+				array[i] = (TYPE)lua_tonumber(L,-1);\
+			} else {\
+				lua_pop(L,1);\
+				return 0;\
+			}\
+			lua_pop(L,1);\
+		}\
+		return 1;\
+	}\
+	SWIGINTERN TYPE* SWIG_get_##NAME##_num_array_fixed(lua_State* L, int index, int size){\
+		TYPE *array;\
+		if (!lua_istable(L,index) || SWIG_itable_size(L,index) != size) {\
+			lua_pushfstring(L,"expected a table of size %d",size);\
+			return 0;\
+		}\
+		array=SWIG_ALLOC_ARRAY(TYPE,size);\
+		if (!SWIG_read_##NAME##_num_array(L,index,array,size)){\
+			lua_pushstring(L,"table must contain numbers");\
+			SWIG_FREE_ARRAY(array);\
+			return 0;\
+		}\
+		return array;\
+	}\
+	SWIGINTERN TYPE* SWIG_get_##NAME##_num_array_var(lua_State* L, int index, int* size)\
+	{\
+		TYPE *array;\
+		if (!lua_istable(L,index)) {\
+			lua_pushstring(L,"expected a table");\
+			return 0;\
+		}\
+		*size=SWIG_itable_size(L,index);\
+		if (*size<1){\
+			lua_pushstring(L,"table appears to be empty");\
+			return 0;\
+		}\
+		array=SWIG_ALLOC_ARRAY(TYPE,*size);\
+		if (!SWIG_read_##NAME##_num_array(L,index,array,*size)){\
+			lua_pushstring(L,"table must contain numbers");\
+			SWIG_FREE_ARRAY(array);\
+			return 0;\
+		}\
+		return array;\
+	}\
+	SWIGINTERN void SWIG_write_##NAME##_num_array(lua_State* L,TYPE *array,int size){\
+		int i;\
+		lua_newtable(L);\
+		for (i = 0; i < size; i++){\
+			lua_pushnumber(L,(lua_Number)array[i]);\
+			lua_rawseti(L,-2,i+1);/* -1 is the number, -2 is the table*/ \
+		}\
+	}
+
+SWIG_DECLARE_TYPEMAP_ARR_FN(schar,signed char);
+SWIG_DECLARE_TYPEMAP_ARR_FN(uchar,unsigned char);
+SWIG_DECLARE_TYPEMAP_ARR_FN(int,int);
+SWIG_DECLARE_TYPEMAP_ARR_FN(uint,unsigned int);
+SWIG_DECLARE_TYPEMAP_ARR_FN(short,short);
+SWIG_DECLARE_TYPEMAP_ARR_FN(ushort,unsigned short);
+SWIG_DECLARE_TYPEMAP_ARR_FN(long,long);
+SWIG_DECLARE_TYPEMAP_ARR_FN(ulong,unsigned long);
+SWIG_DECLARE_TYPEMAP_ARR_FN(float,float);
+SWIG_DECLARE_TYPEMAP_ARR_FN(double,double);
+
+SWIGINTERN int SWIG_read_ptr_array(lua_State* L,int index,void **array,int size,swig_type_info *type){
+	int i;
+	for (i = 0; i < size; i++) {
+		lua_rawgeti(L,index,i+1);
+		if (!lua_isuserdata(L,-1) || SWIG_ConvertPtr(L,-1,&array[i],type,0)==-1){
+			lua_pop(L,1);
+			return 0;
+		}
+		lua_pop(L,1);
+	}
+	return 1;
+}
+SWIGINTERN void** SWIG_get_ptr_array_fixed(lua_State* L, int index, int size,swig_type_info *type){
+	void **array;
+	if (!lua_istable(L,index) || SWIG_itable_size(L,index) != size) {
+		lua_pushfstring(L,"expected a table of size %d",size);
+		return 0;
+	}
+	array=SWIG_ALLOC_ARRAY(void*,size);
+	if (!SWIG_read_ptr_array(L,index,array,size,type)){
+		lua_pushfstring(L,"table must contain pointers of type %s",type->name);
+		SWIG_FREE_ARRAY(array);
+		return 0;
+	}
+	return array;
+}
+SWIGINTERN void** SWIG_get_ptr_array_var(lua_State* L, int index, int* size,swig_type_info *type){
+	void **array;
+	if (!lua_istable(L,index)) {
+		lua_pushstring(L,"expected a table");
+		return 0;
+	}
+	*size=SWIG_itable_size(L,index);
+	if (*size<1){
+		lua_pushstring(L,"table appears to be empty");
+		return 0;
+	}
+	array=SWIG_ALLOC_ARRAY(void*,*size);
+	if (!SWIG_read_ptr_array(L,index,array,*size,type)){
+		lua_pushfstring(L,"table must contain pointers of type %s",type->name);
+		SWIG_FREE_ARRAY(array);
+		return 0;
+	}
+	return array;
+}
+SWIGINTERN void SWIG_write_ptr_array(lua_State* L,void **array,int size,swig_type_info *type,int own){
+	int i;
+	lua_newtable(L);
+	for (i = 0; i < size; i++){
+		SWIG_NewPointerObj(L,array[i],type,own);
+		lua_rawseti(L,-2,i+1);/* -1 is the number, -2 is the table*/
+	}
 }
 
 
@@ -2277,6 +2437,17 @@ SWIGINTERN unsigned char *GeosWkbWriter_writeHEX(GeosWkbWriter *self,GeosGeometr
         return GEOSWKBWriter_writeHEX(writer, geom, size);
     }
 
+GeosGeometry *createCollection(int type, GEOSGeom *geoms, size_t ngeoms)
+{
+    GEOSGeom geom = GEOSGeom_createCollection(type, geoms, ngeoms);
+
+    if(geom == NULL)
+        throw std::runtime_error(message);
+
+    return (GeosGeometry*) geom;
+}
+
+
 GeosGeometry *createEmptyPoint()
 {
     GEOSGeom geom = GEOSGeom_createEmptyPoint();
@@ -2286,6 +2457,77 @@ GeosGeometry *createEmptyPoint()
 
     return (GeosGeometry*) geom;
 }
+
+GeosGeometry *createEmptyLineString()
+{
+    GEOSGeom geom = GEOSGeom_createEmptyLineString();
+
+    if(geom == NULL)
+        throw std::runtime_error(message);
+
+    return (GeosGeometry*) geom;
+}
+
+GeosGeometry *createEmptyPolygon()
+{
+    GEOSGeom geom = GEOSGeom_createEmptyPolygon();
+
+    if(geom == NULL)
+        throw std::runtime_error(message);
+
+    return (GeosGeometry*) geom;
+}
+
+GeosGeometry *createEmptyCollection(int type)
+{
+    GEOSGeom geom = GEOSGeom_createEmptyCollection(type);
+
+    if(geom == NULL)
+        throw std::runtime_error(message);
+
+    return (GeosGeometry*) geom;
+}
+
+GeosGeometry *createEmptyPoint_r(GEOSContextHandle_t handle)
+{
+    GEOSGeom geom = GEOSGeom_createEmptyPoint_r(handle);
+
+    if(geom == NULL)
+        throw std::runtime_error(message);
+
+    return (GeosGeometry*) geom;
+}
+
+GeosGeometry *createEmptyLineString_r(GEOSContextHandle_t handle)
+{
+    GEOSGeom geom = GEOSGeom_createEmptyLineString_r(handle);
+
+    if(geom == NULL)
+        throw std::runtime_error(message);
+
+    return (GeosGeometry*) geom;
+}
+
+GeosGeometry *createEmptyPolygon_r(GEOSContextHandle_t handle)
+{
+    GEOSGeom geom = GEOSGeom_createEmptyPolygon_r(handle);
+
+    if(geom == NULL)
+        throw std::runtime_error(message);
+
+    return (GeosGeometry*) geom;
+}
+
+GeosGeometry *createEmptyCollection_r(GEOSContextHandle_t handle,int type)
+{
+    GEOSGeom geom = GEOSGeom_createEmptyCollection_r(handle, type);
+
+    if(geom == NULL)
+        throw std::runtime_error(message);
+
+    return (GeosGeometry*) geom;
+}
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -5829,7 +6071,7 @@ static int _wrap_createPolygon(lua_State* L) {
           GeosLinearRing *ring = NULL;
           int convertResult = SWIG_ConvertPtr(L, -1, (void**)&ring, SWIGTYPE_p_GeosLinearRing, SWIG_POINTER_DISOWN);
           if (!SWIG_IsOK(convertResult)) {
-            lua_pushstring(L,SWIG_ArgError(convertResult));
+            lua_pushstring(L,"Something has been wrong");
             SWIG_fail;
           }
           /* Put the pointer in the array */
@@ -7153,6 +7395,111 @@ static swig_lua_class *swig_GeosWkbWriter_bases[] = {0};
 static const char *swig_GeosWkbWriter_base_names[] = {0};
 static swig_lua_class _wrap_class_GeosWkbWriter = { "WkbWriter", &SWIGTYPE_p_GeosWkbWriter,_wrap_new_WkbWriter, swig_delete_WkbWriter, swig_GeosWkbWriter_methods, swig_GeosWkbWriter_attributes, swig_GeosWkbWriter_bases, swig_GeosWkbWriter_base_names };
 
+static int _wrap_createCollection(lua_State* L) {
+  int SWIG_arg = 0;
+  int arg1 ;
+  GEOSGeom *arg2 = (GEOSGeom *) 0 ;
+  size_t arg3 ;
+  GeosGeometry *result = 0 ;
+  
+  SWIG_check_num_args("createCollection",2,2)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("createCollection",1,"int");
+  arg1 = (int)lua_tonumber(L, 1);
+  {
+    if (!lua_toboolean(L,-1))
+    {
+      arg2 = NULL;
+      arg3 = 0;
+    }
+    else
+    {
+      luaL_checktype(L, -1, LUA_TTABLE);
+      arg3 = lua_objlen(L, -1);
+      arg2 = (GEOSGeom*) malloc(arg3*sizeof(GEOSGeom*));
+      for (size_t i = 0; i < arg3; i++)
+      {
+        lua_rawgeti(L, -1, i+1);
+        GEOSGeom geom = NULL;
+        int convertResult = SWIG_ConvertPtr(L, -1, (void**)&geom, SWIGTYPE_GEOSGeom, SWIG_POINTER_DISOWN);
+        if (!SWIG_IsOK(convertResult)) {
+          lua_pushstring(L, "something has been wrong");
+          SWIG_fail;
+        }
+        arg2[i] = geom;
+      }
+    }
+  }
+  {
+    try
+    {
+      result = (GeosGeometry *)createCollection(arg1,arg2,arg3);
+    }
+    catch (const std::exception& e)
+    {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    /* %typemap(out) GeosGeometry */
+    
+    if (result == NULL)
+    SWIG_exception(SWIG_RuntimeError, message);
+    
+    GeosGeometry *geom = result;
+    GEOSGeomTypes geomId = (GEOSGeomTypes)GEOSGeomTypeId((GEOSGeom) geom);
+    
+    switch (geomId)
+    {
+    case GEOS_POINT:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosPoint, 1);
+      break;
+    case GEOS_LINESTRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosLineString, 1);
+      break;
+    case GEOS_LINEARRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosLinearRing, 1);
+      break;
+    case GEOS_POLYGON:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosPolygon, 1);
+      break;
+    case GEOS_MULTIPOINT:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiPoint, 1);
+      break;
+    case GEOS_MULTILINESTRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiLineString, 1);
+      break;
+    case GEOS_MULTIPOLYGON:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiPolygon, 1);
+      break;
+    case GEOS_GEOMETRYCOLLECTION:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
+      break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
+    }
+    SWIG_arg++;
+  }
+  {
+    if (arg2) {
+      free((void*) arg2);
+    }
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  {
+    if (arg2) {
+      free((void*) arg2);
+    }
+  }
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
 static int _wrap_createEmptyPoint(lua_State* L) {
   int SWIG_arg = 0;
   GeosGeometry *result = 0 ;
@@ -7162,6 +7509,510 @@ static int _wrap_createEmptyPoint(lua_State* L) {
     try
     {
       result = (GeosGeometry *)createEmptyPoint();
+    }
+    catch (const std::exception& e)
+    {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    /* %typemap(out) GeosGeometry */
+    
+    if (result == NULL)
+    SWIG_exception(SWIG_RuntimeError, message);
+    
+    GeosGeometry *geom = result;
+    GEOSGeomTypes geomId = (GEOSGeomTypes)GEOSGeomTypeId((GEOSGeom) geom);
+    
+    switch (geomId)
+    {
+    case GEOS_POINT:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosPoint, 1);
+      break;
+    case GEOS_LINESTRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosLineString, 1);
+      break;
+    case GEOS_LINEARRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosLinearRing, 1);
+      break;
+    case GEOS_POLYGON:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosPolygon, 1);
+      break;
+    case GEOS_MULTIPOINT:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiPoint, 1);
+      break;
+    case GEOS_MULTILINESTRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiLineString, 1);
+      break;
+    case GEOS_MULTIPOLYGON:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiPolygon, 1);
+      break;
+    case GEOS_GEOMETRYCOLLECTION:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
+      break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
+    }
+    SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_createEmptyLineString(lua_State* L) {
+  int SWIG_arg = 0;
+  GeosGeometry *result = 0 ;
+  
+  SWIG_check_num_args("createEmptyLineString",0,0)
+  {
+    try
+    {
+      result = (GeosGeometry *)createEmptyLineString();
+    }
+    catch (const std::exception& e)
+    {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    /* %typemap(out) GeosGeometry */
+    
+    if (result == NULL)
+    SWIG_exception(SWIG_RuntimeError, message);
+    
+    GeosGeometry *geom = result;
+    GEOSGeomTypes geomId = (GEOSGeomTypes)GEOSGeomTypeId((GEOSGeom) geom);
+    
+    switch (geomId)
+    {
+    case GEOS_POINT:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosPoint, 1);
+      break;
+    case GEOS_LINESTRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosLineString, 1);
+      break;
+    case GEOS_LINEARRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosLinearRing, 1);
+      break;
+    case GEOS_POLYGON:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosPolygon, 1);
+      break;
+    case GEOS_MULTIPOINT:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiPoint, 1);
+      break;
+    case GEOS_MULTILINESTRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiLineString, 1);
+      break;
+    case GEOS_MULTIPOLYGON:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiPolygon, 1);
+      break;
+    case GEOS_GEOMETRYCOLLECTION:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
+      break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
+    }
+    SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_createEmptyPolygon(lua_State* L) {
+  int SWIG_arg = 0;
+  GeosGeometry *result = 0 ;
+  
+  SWIG_check_num_args("createEmptyPolygon",0,0)
+  {
+    try
+    {
+      result = (GeosGeometry *)createEmptyPolygon();
+    }
+    catch (const std::exception& e)
+    {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    /* %typemap(out) GeosGeometry */
+    
+    if (result == NULL)
+    SWIG_exception(SWIG_RuntimeError, message);
+    
+    GeosGeometry *geom = result;
+    GEOSGeomTypes geomId = (GEOSGeomTypes)GEOSGeomTypeId((GEOSGeom) geom);
+    
+    switch (geomId)
+    {
+    case GEOS_POINT:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosPoint, 1);
+      break;
+    case GEOS_LINESTRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosLineString, 1);
+      break;
+    case GEOS_LINEARRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosLinearRing, 1);
+      break;
+    case GEOS_POLYGON:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosPolygon, 1);
+      break;
+    case GEOS_MULTIPOINT:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiPoint, 1);
+      break;
+    case GEOS_MULTILINESTRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiLineString, 1);
+      break;
+    case GEOS_MULTIPOLYGON:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiPolygon, 1);
+      break;
+    case GEOS_GEOMETRYCOLLECTION:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
+      break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
+    }
+    SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_createEmptyCollection(lua_State* L) {
+  int SWIG_arg = 0;
+  int arg1 ;
+  GeosGeometry *result = 0 ;
+  
+  SWIG_check_num_args("createEmptyCollection",1,1)
+  if(!lua_isnumber(L,1)) SWIG_fail_arg("createEmptyCollection",1,"int");
+  arg1 = (int)lua_tonumber(L, 1);
+  {
+    try
+    {
+      result = (GeosGeometry *)createEmptyCollection(arg1);
+    }
+    catch (const std::exception& e)
+    {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    /* %typemap(out) GeosGeometry */
+    
+    if (result == NULL)
+    SWIG_exception(SWIG_RuntimeError, message);
+    
+    GeosGeometry *geom = result;
+    GEOSGeomTypes geomId = (GEOSGeomTypes)GEOSGeomTypeId((GEOSGeom) geom);
+    
+    switch (geomId)
+    {
+    case GEOS_POINT:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosPoint, 1);
+      break;
+    case GEOS_LINESTRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosLineString, 1);
+      break;
+    case GEOS_LINEARRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosLinearRing, 1);
+      break;
+    case GEOS_POLYGON:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosPolygon, 1);
+      break;
+    case GEOS_MULTIPOINT:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiPoint, 1);
+      break;
+    case GEOS_MULTILINESTRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiLineString, 1);
+      break;
+    case GEOS_MULTIPOLYGON:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiPolygon, 1);
+      break;
+    case GEOS_GEOMETRYCOLLECTION:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
+      break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
+    }
+    SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_createEmptyPoint_r(lua_State* L) {
+  int SWIG_arg = 0;
+  GEOSContextHandle_t arg1 ;
+  GEOSContextHandle_t *argp1 ;
+  GeosGeometry *result = 0 ;
+  
+  SWIG_check_num_args("createEmptyPoint_r",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("createEmptyPoint_r",1,"GEOSContextHandle_t");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_GEOSContextHandle_t,0))){
+    SWIG_fail_ptr("createEmptyPoint_r",1,SWIGTYPE_p_GEOSContextHandle_t);
+  }
+  arg1 = *argp1;
+  
+  {
+    try
+    {
+      result = (GeosGeometry *)createEmptyPoint_r(arg1);
+    }
+    catch (const std::exception& e)
+    {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    /* %typemap(out) GeosGeometry */
+    
+    if (result == NULL)
+    SWIG_exception(SWIG_RuntimeError, message);
+    
+    GeosGeometry *geom = result;
+    GEOSGeomTypes geomId = (GEOSGeomTypes)GEOSGeomTypeId((GEOSGeom) geom);
+    
+    switch (geomId)
+    {
+    case GEOS_POINT:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosPoint, 1);
+      break;
+    case GEOS_LINESTRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosLineString, 1);
+      break;
+    case GEOS_LINEARRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosLinearRing, 1);
+      break;
+    case GEOS_POLYGON:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosPolygon, 1);
+      break;
+    case GEOS_MULTIPOINT:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiPoint, 1);
+      break;
+    case GEOS_MULTILINESTRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiLineString, 1);
+      break;
+    case GEOS_MULTIPOLYGON:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiPolygon, 1);
+      break;
+    case GEOS_GEOMETRYCOLLECTION:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
+      break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
+    }
+    SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_createEmptyLineString_r(lua_State* L) {
+  int SWIG_arg = 0;
+  GEOSContextHandle_t arg1 ;
+  GEOSContextHandle_t *argp1 ;
+  GeosGeometry *result = 0 ;
+  
+  SWIG_check_num_args("createEmptyLineString_r",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("createEmptyLineString_r",1,"GEOSContextHandle_t");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_GEOSContextHandle_t,0))){
+    SWIG_fail_ptr("createEmptyLineString_r",1,SWIGTYPE_p_GEOSContextHandle_t);
+  }
+  arg1 = *argp1;
+  
+  {
+    try
+    {
+      result = (GeosGeometry *)createEmptyLineString_r(arg1);
+    }
+    catch (const std::exception& e)
+    {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    /* %typemap(out) GeosGeometry */
+    
+    if (result == NULL)
+    SWIG_exception(SWIG_RuntimeError, message);
+    
+    GeosGeometry *geom = result;
+    GEOSGeomTypes geomId = (GEOSGeomTypes)GEOSGeomTypeId((GEOSGeom) geom);
+    
+    switch (geomId)
+    {
+    case GEOS_POINT:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosPoint, 1);
+      break;
+    case GEOS_LINESTRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosLineString, 1);
+      break;
+    case GEOS_LINEARRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosLinearRing, 1);
+      break;
+    case GEOS_POLYGON:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosPolygon, 1);
+      break;
+    case GEOS_MULTIPOINT:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiPoint, 1);
+      break;
+    case GEOS_MULTILINESTRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiLineString, 1);
+      break;
+    case GEOS_MULTIPOLYGON:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiPolygon, 1);
+      break;
+    case GEOS_GEOMETRYCOLLECTION:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
+      break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
+    }
+    SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_createEmptyPolygon_r(lua_State* L) {
+  int SWIG_arg = 0;
+  GEOSContextHandle_t arg1 ;
+  GEOSContextHandle_t *argp1 ;
+  GeosGeometry *result = 0 ;
+  
+  SWIG_check_num_args("createEmptyPolygon_r",1,1)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("createEmptyPolygon_r",1,"GEOSContextHandle_t");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_GEOSContextHandle_t,0))){
+    SWIG_fail_ptr("createEmptyPolygon_r",1,SWIGTYPE_p_GEOSContextHandle_t);
+  }
+  arg1 = *argp1;
+  
+  {
+    try
+    {
+      result = (GeosGeometry *)createEmptyPolygon_r(arg1);
+    }
+    catch (const std::exception& e)
+    {
+      SWIG_exception(SWIG_RuntimeError, e.what());
+    }
+  }
+  {
+    /* %typemap(out) GeosGeometry */
+    
+    if (result == NULL)
+    SWIG_exception(SWIG_RuntimeError, message);
+    
+    GeosGeometry *geom = result;
+    GEOSGeomTypes geomId = (GEOSGeomTypes)GEOSGeomTypeId((GEOSGeom) geom);
+    
+    switch (geomId)
+    {
+    case GEOS_POINT:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosPoint, 1);
+      break;
+    case GEOS_LINESTRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosLineString, 1);
+      break;
+    case GEOS_LINEARRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosLinearRing, 1);
+      break;
+    case GEOS_POLYGON:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosPolygon, 1);
+      break;
+    case GEOS_MULTIPOINT:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiPoint, 1);
+      break;
+    case GEOS_MULTILINESTRING:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiLineString, 1);
+      break;
+    case GEOS_MULTIPOLYGON:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosMultiPolygon, 1);
+      break;
+    case GEOS_GEOMETRYCOLLECTION:
+      SWIG_NewPointerObj(L, (void *)(result), SWIGTYPE_p_GeosGeometryCollection, 1);
+      break;
+    default:
+      lua_pushstring(L,"something bad happened");
+      SWIG_fail;
+    }
+    SWIG_arg++;
+  }
+  return SWIG_arg;
+  
+  if(0) SWIG_fail;
+  
+fail:
+  lua_error(L);
+  return SWIG_arg;
+}
+
+
+static int _wrap_createEmptyCollection_r(lua_State* L) {
+  int SWIG_arg = 0;
+  GEOSContextHandle_t arg1 ;
+  int arg2 ;
+  GEOSContextHandle_t *argp1 ;
+  GeosGeometry *result = 0 ;
+  
+  SWIG_check_num_args("createEmptyCollection_r",2,2)
+  if(!lua_isuserdata(L,1)) SWIG_fail_arg("createEmptyCollection_r",1,"GEOSContextHandle_t");
+  if(!lua_isnumber(L,2)) SWIG_fail_arg("createEmptyCollection_r",2,"int");
+  
+  if (!SWIG_IsOK(SWIG_ConvertPtr(L,1,(void**)&argp1,SWIGTYPE_p_GEOSContextHandle_t,0))){
+    SWIG_fail_ptr("createEmptyCollection_r",1,SWIGTYPE_p_GEOSContextHandle_t);
+  }
+  arg1 = *argp1;
+  
+  arg2 = (int)lua_tonumber(L, 2);
+  {
+    try
+    {
+      result = (GeosGeometry *)createEmptyCollection_r(arg1,arg2);
     }
     catch (const std::exception& e)
     {
@@ -7229,7 +8080,15 @@ static const struct luaL_reg swig_commands[] = {
     { "createLineString", _wrap_createLineString},
     { "createLinearRing", _wrap_createLinearRing},
     { "createPolygon", _wrap_createPolygon},
+    { "createCollection", _wrap_createCollection},
     { "createEmptyPoint", _wrap_createEmptyPoint},
+    { "createEmptyLineString", _wrap_createEmptyLineString},
+    { "createEmptyPolygon", _wrap_createEmptyPolygon},
+    { "createEmptyCollection", _wrap_createEmptyCollection},
+    { "createEmptyPoint_r", _wrap_createEmptyPoint_r},
+    { "createEmptyLineString_r", _wrap_createEmptyLineString_r},
+    { "createEmptyPolygon_r", _wrap_createEmptyPolygon_r},
+    { "createEmptyCollection_r", _wrap_createEmptyCollection_r},
     {0,0}
 };
 
@@ -7302,6 +8161,9 @@ static void *_p_GeosMultiLinearRingTo_p_GeosGeometry(void *x, int *SWIGUNUSEDPAR
 static void *_p_GeosGeometryCollectionTo_p_GeosGeometry(void *x, int *SWIGUNUSEDPARM(newmemory)) {
     return (void *)((GeosGeometry *)  ((GeosGeometryCollection *) x));
 }
+static swig_type_info _swigt__GEOSGeom = {"_GEOSGeom", "GEOSGeom", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GEOSContextHandle_t = {"_p_GEOSContextHandle_t", "GEOSContextHandle_t *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_GEOSGeom = {"_p_GEOSGeom", "GEOSGeom *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_GeosCoordinateSequence = {"_p_GeosCoordinateSequence", "GeosCoordinateSequence *", 0, 0, (void*)&_wrap_class_GeosCoordinateSequence, 0};
 static swig_type_info _swigt__p_GeosGeometry = {"_p_GeosGeometry", "GeosGeometry *", 0, 0, (void*)&_wrap_class_GeosGeometry, 0};
 static swig_type_info _swigt__p_GeosGeometryCollection = {"_p_GeosGeometryCollection", "GeosGeometryCollection *", 0, 0, (void*)&_wrap_class_GeosGeometryCollection, 0};
@@ -7327,6 +8189,9 @@ static swig_type_info _swigt__p_std__string = {"_p_std__string", "std::string *"
 static swig_type_info _swigt__p_unsigned_char = {"_p_unsigned_char", "unsigned char *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
+  &_swigt__GEOSGeom,
+  &_swigt__p_GEOSContextHandle_t,
+  &_swigt__p_GEOSGeom,
   &_swigt__p_GeosCoordinateSequence,
   &_swigt__p_GeosGeometry,
   &_swigt__p_GeosGeometryCollection,
@@ -7352,6 +8217,9 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_unsigned_char,
 };
 
+static swig_cast_info _swigc__GEOSGeom[] = {  {&_swigt__GEOSGeom, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GEOSContextHandle_t[] = {  {&_swigt__p_GEOSContextHandle_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_GEOSGeom[] = {  {&_swigt__p_GEOSGeom, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GeosCoordinateSequence[] = {  {&_swigt__p_GeosCoordinateSequence, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GeosGeometry[] = {  {&_swigt__p_GeosPolygon, _p_GeosPolygonTo_p_GeosGeometry, 0, 0},  {&_swigt__p_GeosMultiPolygon, _p_GeosMultiPolygonTo_p_GeosGeometry, 0, 0},  {&_swigt__p_GeosPoint, _p_GeosPointTo_p_GeosGeometry, 0, 0},  {&_swigt__p_GeosGeometry, 0, 0, 0},  {&_swigt__p_GeosLineString, _p_GeosLineStringTo_p_GeosGeometry, 0, 0},  {&_swigt__p_GeosLinearRing, _p_GeosLinearRingTo_p_GeosGeometry, 0, 0},  {&_swigt__p_GeosMultiPoint, _p_GeosMultiPointTo_p_GeosGeometry, 0, 0},  {&_swigt__p_GeosMultiLineString, _p_GeosMultiLineStringTo_p_GeosGeometry, 0, 0},  {&_swigt__p_GeosMultiLinearRing, _p_GeosMultiLinearRingTo_p_GeosGeometry, 0, 0},  {&_swigt__p_GeosGeometryCollection, _p_GeosGeometryCollectionTo_p_GeosGeometry, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_GeosGeometryCollection[] = {  {&_swigt__p_GeosMultiPolygon, _p_GeosMultiPolygonTo_p_GeosGeometryCollection, 0, 0},  {&_swigt__p_GeosMultiPoint, _p_GeosMultiPointTo_p_GeosGeometryCollection, 0, 0},  {&_swigt__p_GeosMultiLineString, _p_GeosMultiLineStringTo_p_GeosGeometryCollection, 0, 0},  {&_swigt__p_GeosMultiLinearRing, _p_GeosMultiLinearRingTo_p_GeosGeometryCollection, 0, 0},  {&_swigt__p_GeosGeometryCollection, 0, 0, 0},{0, 0, 0, 0}};
@@ -7377,6 +8245,9 @@ static swig_cast_info _swigc__p_std__string[] = {  {&_swigt__p_std__string, 0, 0
 static swig_cast_info _swigc__p_unsigned_char[] = {  {&_swigt__p_unsigned_char, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
+  _swigc__GEOSGeom,
+  _swigc__p_GEOSContextHandle_t,
+  _swigc__p_GEOSGeom,
   _swigc__p_GeosCoordinateSequence,
   _swigc__p_GeosGeometry,
   _swigc__p_GeosGeometryCollection,

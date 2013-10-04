@@ -134,6 +134,7 @@ const char *GEOSversion();
 #endif
 
 #ifdef SWIGLUA
+	%include <typemaps.i>
 	%include @top_srcdir@/swig/lua/typemap.i
 	%include @top_srcdir@/swig/common/geom.i
 	%include @top_srcdir@/swig/lua/lua.i

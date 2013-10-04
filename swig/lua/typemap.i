@@ -11,6 +11,41 @@
  *
  * ========================================================================= */
 
+/* Convert a Lua table of GeosGeometry to a C array of GeosGeom */
+/* FIXME */
+%typemap(in, numinputs=1) (GEOSGeom *geoms, size_t ngeoms)
+{
+    if (!lua_toboolean(L,-1))
+    {
+        $1 = NULL;
+        $2 = 0;
+    }
+    else
+    {
+        luaL_checktype(L, -1, LUA_TTABLE);
+        $2 = lua_objlen(L, -1);
+        $1 = (GEOSGeom*) malloc($2*sizeof(GEOSGeom*));
+        for (size_t i = 0; i < $2; i++)
+        {
+            lua_rawgeti(L, -1, i+1);
+            GEOSGeom geom = NULL;
+            int convertResult = SWIG_ConvertPtr(L, -1, (void**)&geom, $descriptor(GEOSGeom), SWIG_POINTER_DISOWN);
+            if (!SWIG_IsOK(convertResult)) {
+                lua_pushstring(L, "something has been wrong");
+                SWIG_fail;
+            }
+            $1[i] = geom;
+        }
+    }
+}
+
+%typemap(freearg) (GEOSGeom *geoms, size_t ngeoms)
+{
+  if ($1) {
+    free((void*) $1);
+  }
+}
+
 /* Convert a Lua table of GeosLinearRings to a C array. */
 %typemap(in,numinputs=1) (GeosLinearRing **holes, size_t nholes)
 {
@@ -33,7 +68,7 @@
             GeosLinearRing *ring = NULL;
             int convertResult = SWIG_ConvertPtr(L, -1, (void**)&ring, $descriptor(GeosLinearRing*), SWIG_POINTER_DISOWN);
             if (!SWIG_IsOK(convertResult)) {
-                lua_pushstring(L,SWIG_ArgError(convertResult));
+                lua_pushstring(L,"Something has been wrong");
                 SWIG_fail;
             }
             /* Put the pointer in the array */
@@ -137,11 +172,6 @@ provided string. */
 {
     /* %typemap(freearg) size_t *size */
     free(result);
-}
-
-%typemap(in,numinputs=0) void
-{
-    $1 = NULL;
 }
 
 /* Setup a default typemap for buffer. */
