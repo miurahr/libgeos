@@ -1,3 +1,9 @@
+geos (3.4.99~3.5.0dev~20131028) precise; urgency=low
+
+  * Merge lua-support
+
+ -- Hiroshi Miura <miurahr@linux.com>  Mon, 28 Oct 2013 08:19:12 +0900
+
 geos (3.4.99~3.5.0dev~20130922) precise; urgency=low
 
   * Debian Package rebuild.
