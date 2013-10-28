@@ -1,6 +1,4 @@
 _build
-aclocal.m4
-Makefile.in
 Makefile
 geos_svn_revision.h
 .libs
@@ -31,20 +29,12 @@ include/geos/platform.h
 include/geos/stamp-h2
 include/geos/version.h
 include/stamp-h1
-install-sh
 libtool
-ltmain.sh
-missing
-py-compile
 swig/geos.i
 autom4te.cache/
 capi/geos_c.h
-config.guess
 config.log
 config.status
-config.sub
-configure
-depcomp
 doc/Doxyfile
 doc/example
 include/config.h
