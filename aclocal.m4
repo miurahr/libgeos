@@ -1011,6 +1011,8 @@ AC_SUBST([am__untar])
 
 m4_include([macros/ac_pkg_swig.m4])
 m4_include([macros/ac_python_devel.m4])
+m4_include([macros/ax_compare_version.m4])
+m4_include([macros/ax_lua.m4])
 m4_include([macros/libtool.m4])
 m4_include([macros/ltoptions.m4])
 m4_include([macros/ltsugar.m4])

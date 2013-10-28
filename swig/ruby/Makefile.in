@@ -40,7 +40,8 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/macros/ac_pkg_swig.m4 \
 	$(top_srcdir)/macros/ac_python_devel.m4 \
-	$(top_srcdir)/macros/libtool.m4 \
+	$(top_srcdir)/macros/ax_compare_version.m4 \
+	$(top_srcdir)/macros/ax_lua.m4 $(top_srcdir)/macros/libtool.m4 \
 	$(top_srcdir)/macros/ltoptions.m4 \
 	$(top_srcdir)/macros/ltsugar.m4 \
 	$(top_srcdir)/macros/ltversion.m4 \
@@ -206,6 +207,14 @@ LIBTOOL = @LIBTOOL@
 LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
+LUA = @LUA@
+LUA_EXEC_PREFIX = @LUA_EXEC_PREFIX@
+LUA_INCLUDE = @LUA_INCLUDE@
+LUA_LIB = @LUA_LIB@
+LUA_PLATFORM = @LUA_PLATFORM@
+LUA_PREFIX = @LUA_PREFIX@
+LUA_SHORT_VERSION = @LUA_SHORT_VERSION@
+LUA_VERSION = @LUA_VERSION@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
@@ -296,10 +305,14 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 localedir = @localedir@
 localstatedir = @localstatedir@
+luadir = @luadir@
+luaexecdir = @luaexecdir@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
 pdfdir = @pdfdir@
+pkgluadir = @pkgluadir@
+pkgluaexecdir = @pkgluaexecdir@
 pkgpyexecdir = @pkgpyexecdir@
 pkgpythondir = @pkgpythondir@
 prefix = @prefix@
