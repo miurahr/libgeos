@@ -1,3 +1,15 @@
+geos (3.4.99~3.5.0dev~20131030) precise; urgency=low
+
+  * Add dependency to lua5.1
+
+ -- Hiroshi Miura <miurahr@linux.com>  Tue, 29 Oct 2013 09:05:54 +0900
+
+geos (3.4.99~3.5.0dev~20131029) precise; urgency=low
+
+  * Fix build failure for debian package
+
+ -- Hiroshi Miura <miurahr@linux.com>  Tue, 29 Oct 2013 08:25:47 +0900
+
 geos (3.4.99~3.5.0dev~20131028) precise; urgency=low
 
   * Merge lua-support

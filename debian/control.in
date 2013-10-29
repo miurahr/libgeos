@@ -3,7 +3,7 @@ Section: science
 Priority: optional
 Maintainer: Debian GIS Project <pkg-grass-devel@lists.alioth.debian.org>
 Uploaders: Francesco Paolo Lovergine <frankie@debian.org>
-Build-Depends: debhelper (>= 9), doxygen, swig, ruby1.8, ruby1.8-dev
+Build-Depends: debhelper (>= 9), doxygen, swig, ruby1.8, ruby1.8-dev, lua5.1, liblua5.1-0-dev
 Standards-Version: 3.9.3
 Homepage: http://trac.osgeo.org/geos/
 Vcs-Browser: http://git.debian.org/?p=pkg-grass/geos.git
@@ -108,7 +108,7 @@ Description: GEOS bindings for Ruby
 Package: libgeos-lua5.1
 Section: libs
 Architecture: any
-Depends: ${shlib:Depends}, ${misc:Depends}
+Depends: ${shlib:Depends}, ${misc:Depends}, lua5.1, liblua5.1-0
 Description: GEOS bindings for Lua
  GEOS provides a patial object model and fundamental geometoric
  functions. It implements the geometry model defined in the
